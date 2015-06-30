@@ -9,6 +9,9 @@ buildscript {
 apply plugin: 'com.android.application'
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
     jcenter()
 }
 
@@ -39,4 +42,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile(name:'library-2.4.1', ext:'aar')
 }
