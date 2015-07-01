@@ -16,5 +16,10 @@
         android:layout_height="2dp"
         app:fades="false"
         />
+    <ListView
+        android:id="@+id/main_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout>

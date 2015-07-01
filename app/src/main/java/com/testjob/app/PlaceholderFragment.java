@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.testjob.app.adapters.PictureSliderAdapter;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 /**
@@ -22,7 +23,7 @@ public class PlaceholderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ViewPager viewPictures = (ViewPager) rootView.findViewById(R.id.up_sliding_picture);
-        UpPictureAdapter upPictureAdapter = new UpPictureAdapter(getActivity());
+        PictureSliderAdapter upPictureAdapter = new PictureSliderAdapter(getActivity());
         viewPictures.setAdapter(upPictureAdapter);
         UnderlinePageIndicator pictureIndicator =
                 (UnderlinePageIndicator) rootView.findViewById(R.id.sliding_picture_underline_indicator);

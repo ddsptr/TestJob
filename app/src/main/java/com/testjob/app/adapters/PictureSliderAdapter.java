@@ -1,22 +1,23 @@
-package com.testjob.app;
+package com.testjob.app.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.testjob.app.R;
 
 /**
  * Created by dds on 30.06.15.
  */
-public class UpPictureAdapter extends PagerAdapter {
+public class PictureSliderAdapter extends PagerAdapter {
     private Context mContext;
     private int [] mPictures = new int [] {
             R.drawable.kudago1,
             R.drawable.kudago2
     };
 
-    UpPictureAdapter(Context context) {
+    public PictureSliderAdapter(Context context) {
         mContext = context;
     }
 
