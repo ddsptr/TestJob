@@ -12,7 +12,7 @@ import com.testjob.app.R;
  */
 public class PictureSliderAdapter extends PagerAdapter {
     private Context mContext;
-    private int [] mPictures = new int [] {
+    private int[] mPictures = new int[]{
             R.drawable.kudago1,
             R.drawable.kudago2
     };

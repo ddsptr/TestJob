@@ -42,14 +42,17 @@ public class ListAdapter extends BaseAdapter {
 
     public void addArticle(MainArticle mainArticle) {
         mMainArticle = mainArticle;
+        notifyDataSetChanged();
     }
 
     public void addSubArticle(SubArticle subArticle) {
         mSubArticle.add(subArticle);
+        notifyDataSetChanged();
     }
 
     public void addComment(Comment comment) {
         mComment.add(comment);
+        notifyDataSetChanged();
     }
 
     @Override
