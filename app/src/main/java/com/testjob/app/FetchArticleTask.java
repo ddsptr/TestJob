@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * Created by dds on 01.07.15.
  */
-public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
+public class FetchArticleTask extends AsyncTask<Void, Object, Void> {
     private final String LOG_TAG = FetchArticleTask.class.getSimpleName();
 
     private Context mContext;
@@ -35,6 +35,7 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
         mPictureSliderAdapter = pictureSliderAdapter;
     }
 
+    @Override
     protected Void doInBackground(Void... params) {
         try {
             getArticleDataFromJson();
@@ -42,6 +43,24 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+    }
+
+    @Override
+    protected void onProgressUpdate(Object... objects) {
+        if (objects[0] instanceof MainArticle) {
+            mListAdapter.addArticle((MainArticle) objects[0]);
+        } else if (objects[0] instanceof SubArticle) {
+            mListAdapter.addSubArticle((SubArticle) objects[0]);
+        } else if (objects[0] instanceof Comment) {
+            mListAdapter.addComment((Comment) objects[0]);
+        } else if (objects[0] instanceof String) {
+            mPictureSliderAdapter.addPicture((String) objects[0]);
+        }
     }
 
     private void getArticleDataFromJson()
@@ -69,12 +88,12 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
             JSONArray articlePicturesJsonArray = articleJson.getJSONArray(PICTURES);
             for (int i = 0; i < articlePicturesJsonArray.length(); i++) {
                 String picture = articlePicturesJsonArray.getString(i);
-                mPictureSliderAdapter.addPicture(picture);
+                publishProgress(picture);
             }
 
-            String articleTitleJson = rootElementJson.getString(TITLE);
-            String articleDescriptionJson = rootElementJson.getString(DESCRIPTION);
-            mListAdapter.addArticle(new MainArticle(articleTitleJson, articleDescriptionJson));
+            String articleTitleJson = articleJson.getString(TITLE);
+            String articleDescriptionJson = articleJson.getString(DESCRIPTION);
+            publishProgress(new MainArticle(articleTitleJson, articleDescriptionJson));
 
             JSONArray subArticlesJsonArray = rootElementJson.getJSONArray(SUBARTICLES);
             for (int i = 0; i < subArticlesJsonArray.length(); i++) {
@@ -82,7 +101,7 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
                 String subArticlePicture = subArticleJson.getString(PICTURE);
                 String subArticleTitle = subArticleJson.getString(TITLE);
                 String subArticleDescription = subArticleJson.getString(DESCRIPTION);
-                mListAdapter.addSubArticle(new SubArticle(subArticleTitle, subArticleDescription, subArticlePicture));
+                publishProgress(new SubArticle(subArticleTitle, subArticleDescription, subArticlePicture));
             }
 
             JSONArray commentJsonArray = rootElementJson.getJSONArray(COMMENTS);
@@ -93,7 +112,7 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
                 String commentText = commentJson.getString(TEXT);
                 long dateTime = commentJson.getLong(DATE);
                 String commentDate = getReadableDateString(dateTime);
-                mListAdapter.addComment(new Comment(commentUserName, commentText, commentDate, commentAvatar));
+                publishProgress(new Comment(commentUserName, commentText, commentDate, commentAvatar));
             }
 
         } catch (JSONException e) {

@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
 import com.viewpagerindicator.UnderlinePageIndicator;
@@ -31,6 +32,9 @@ public class MainFragment extends Fragment {
         pictureIndicator.setViewPager(viewPictures);
 
         ListAdapter listAdapter = new ListAdapter(getActivity());
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
+        listView.setAdapter(listAdapter);
+
         FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter, pictureSliderAdapter);
         fetchArticleTask.execute();
 

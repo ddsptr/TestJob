@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.testjob.app.DownloadImageTask;
 import com.testjob.app.R;
 import com.testjob.app.dto.Comment;
 import com.testjob.app.dto.MainArticle;
@@ -28,8 +29,8 @@ public class ListAdapter extends BaseAdapter {
     private static final int TYPES_COUNT = 3;
 
     private MainArticle mMainArticle;
-    private ArrayList<SubArticle> mSubArticle;
-    private ArrayList<Comment> mComment;
+    private ArrayList<SubArticle> mSubArticle = new ArrayList<SubArticle>();
+    private ArrayList<Comment> mComment = new ArrayList<Comment>();
 
     private LayoutInflater mInflater;
     private Context mContext;
@@ -94,8 +95,8 @@ public class ListAdapter extends BaseAdapter {
                 int subArticlePosition = getSubArticleFromAbsolutePosition(position);
                 view = mInflater.inflate(R.layout.sub_article, null);
                 ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
-                String imagePath = mSubArticle.get(subArticlePosition).getPicture();
-                //todo fill SubArticle ImageView
+                String imageSubArticleUrl = mSubArticle.get(subArticlePosition).getPicture();
+                new DownloadImageTask(ivSubArticlePicture).execute(imageSubArticleUrl);
                 TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
                 tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
                 TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
@@ -106,7 +107,8 @@ public class ListAdapter extends BaseAdapter {
                 int commentPosition = getCommentFromAbsolutePosition(position);
                 view = mInflater.inflate(R.layout.comment, null);
                 ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
-                //todo fill Comment ImageView
+                String imageCommentAvatarUrl = mComment.get(commentPosition).getAvatar();
+                new DownloadImageTask(ivCommentAvatar).execute(imageCommentAvatarUrl);
                 TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
                 tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
                 TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);

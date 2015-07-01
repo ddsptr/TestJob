@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.testjob.app.DownloadImageTask;
 import com.testjob.app.R;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class PictureSliderAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(mContext);
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-//        imageView.setImageResource(mPictures[position]);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        new DownloadImageTask(imageView).execute(mPictures.get(position));
         container.addView(imageView, 0);
         return imageView;
     }
