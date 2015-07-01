@@ -4,12 +4,20 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.testjob.app.adapters.ListAdapter;
+import com.testjob.app.adapters.PictureSliderAdapter;
+import com.testjob.app.dto.Comment;
+import com.testjob.app.dto.MainArticle;
+import com.testjob.app.dto.SubArticle;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by dds on 01.07.15.
@@ -18,11 +26,13 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
     private final String LOG_TAG = FetchArticleTask.class.getSimpleName();
 
     private Context mContext;
-    private ListAdapter mAdapter;
+    private ListAdapter mListAdapter;
+    private PictureSliderAdapter mPictureSliderAdapter;
 
-    public FetchArticleTask(Context context, ListAdapter adapter) {
+    public FetchArticleTask(Context context, ListAdapter listAdapter, PictureSliderAdapter pictureSliderAdapter) {
         mContext = context;
-        mAdapter = adapter;
+        mListAdapter = listAdapter;
+        mPictureSliderAdapter = pictureSliderAdapter;
     }
 
     protected Void doInBackground(Void... params) {
@@ -51,17 +61,40 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
 
         try {
             InputStream stream = mContext.getResources().openRawResource(R.raw.json);
-            String jsonString = stream.toString();
+            String jsonString = getStringFromInputStream(stream);
             stream.close();
 
-            JSONObject articleJson = new JSONObject(jsonString);
+            JSONObject rootElementJson = new JSONObject(jsonString);
+            JSONObject articleJson = rootElementJson.getJSONObject(ARTICLE);
             JSONArray articlePicturesJsonArray = articleJson.getJSONArray(PICTURES);
             for (int i = 0; i < articlePicturesJsonArray.length(); i++) {
                 String picture = articlePicturesJsonArray.getString(i);
+                mPictureSliderAdapter.addPicture(picture);
             }
 
-            JSONObject articleTitleJson = articleJson.getJSONObject(TITLE);
-            JSONObject articleDescriptionJson = articleJson.getJSONObject(DESCRIPTION);
+            String articleTitleJson = rootElementJson.getString(TITLE);
+            String articleDescriptionJson = rootElementJson.getString(DESCRIPTION);
+            mListAdapter.addArticle(new MainArticle(articleTitleJson, articleDescriptionJson));
+
+            JSONArray subArticlesJsonArray = rootElementJson.getJSONArray(SUBARTICLES);
+            for (int i = 0; i < subArticlesJsonArray.length(); i++) {
+                JSONObject subArticleJson = subArticlesJsonArray.getJSONObject(i);
+                String subArticlePicture = subArticleJson.getString(PICTURE);
+                String subArticleTitle = subArticleJson.getString(TITLE);
+                String subArticleDescription = subArticleJson.getString(DESCRIPTION);
+                mListAdapter.addSubArticle(new SubArticle(subArticleTitle, subArticleDescription, subArticlePicture));
+            }
+
+            JSONArray commentJsonArray = rootElementJson.getJSONArray(COMMENTS);
+            for (int i = 0; i < commentJsonArray.length(); i++) {
+                JSONObject commentJson = commentJsonArray.getJSONObject(i);
+                String commentAvatar = commentJson.getString(AVATAR);
+                String commentUserName = commentJson.getString(USERNAME);
+                String commentText = commentJson.getString(TEXT);
+                long dateTime = commentJson.getLong(DATE);
+                String commentDate = getReadableDateString(dateTime);
+                mListAdapter.addComment(new Comment(commentUserName, commentText, commentDate, commentAvatar));
+            }
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -70,5 +103,40 @@ public class FetchArticleTask extends AsyncTask<Void, Void, Void> {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
+    }
+
+    private String getReadableDateString(long time){
+        Date date = new Date(time * 1000);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return format.format(date).toString();
+    }
+
+    private static String getStringFromInputStream(InputStream is) {
+
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return sb.toString();
+
     }
 }

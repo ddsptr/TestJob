@@ -8,19 +8,19 @@ import java.util.Date;
 public class Comment {
     private String userName;
     private String text;
-    private Date date;
+    private String date;
     private String avatar;
 
     private Comment parent;
 
-    public Comment(String userName, String text, Date date, String avatar) {
+    public Comment(String userName, String text, String date, String avatar) {
         this.userName = userName;
         this.text = text;
         this.date = date;
         this.avatar = avatar;
     }
 
-    public Comment(String userName, String text, Date date, String avatar, Comment parent) {
+    public Comment(String userName, String text, String date, String avatar, Comment parent) {
         this(userName, text, date, avatar);
         this.parent = parent;
     }
@@ -33,7 +33,7 @@ public class Comment {
         return text;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

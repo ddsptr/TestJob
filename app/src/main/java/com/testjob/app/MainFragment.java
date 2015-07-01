@@ -24,14 +24,14 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ViewPager viewPictures = (ViewPager) rootView.findViewById(R.id.up_sliding_picture);
-        PictureSliderAdapter upPictureAdapter = new PictureSliderAdapter(getActivity());
-        viewPictures.setAdapter(upPictureAdapter);
+        PictureSliderAdapter pictureSliderAdapter = new PictureSliderAdapter(getActivity());
+        viewPictures.setAdapter(pictureSliderAdapter);
         UnderlinePageIndicator pictureIndicator =
                 (UnderlinePageIndicator) rootView.findViewById(R.id.sliding_picture_underline_indicator);
         pictureIndicator.setViewPager(viewPictures);
 
         ListAdapter listAdapter = new ListAdapter(getActivity());
-        FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter);
+        FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter, pictureSliderAdapter);
         fetchArticleTask.execute();
 
         return rootView;

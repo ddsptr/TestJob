@@ -1,7 +1,6 @@
 package com.testjob.app.adapters;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +112,7 @@ public class ListAdapter extends BaseAdapter {
                 TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
                 tvCommentText.setText(mComment.get(commentPosition).getText());
                 TextView tvCommentDate = (TextView) view.findViewById(R.id.comment_date);
-                tvCommentDate.setText(DateFormat.format("dd.MM.yyyy", mComment.get(commentPosition).getDate()));
+                tvCommentDate.setText(mComment.get(commentPosition).getDate());
                 break;
 
         }
