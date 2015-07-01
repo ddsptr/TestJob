@@ -8,9 +8,9 @@ import android.media.Image;
 public class SubArticle {
     private String title;
     private String description;
-    private Image picture;
+    private String picture;
 
-    public SubArticle(String title, String description, Image picture) {
+    public SubArticle(String title, String description, String picture) {
         this.title = title;
         this.description = description;
         this.picture = picture;
@@ -24,7 +24,7 @@ public class SubArticle {
         return description;
     }
 
-    public Image getPicture() {
+    public String getPicture() {
         return picture;
     }
 }

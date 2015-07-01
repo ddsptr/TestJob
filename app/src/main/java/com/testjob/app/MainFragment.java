@@ -6,15 +6,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class MainFragment extends Fragment {
 
-    public PlaceholderFragment() {
+    public MainFragment() {
     }
 
     @Override
@@ -28,6 +29,10 @@ public class PlaceholderFragment extends Fragment {
         UnderlinePageIndicator pictureIndicator =
                 (UnderlinePageIndicator) rootView.findViewById(R.id.sliding_picture_underline_indicator);
         pictureIndicator.setViewPager(viewPictures);
+
+        ListAdapter listAdapter = new ListAdapter(getActivity());
+        FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter);
+        fetchArticleTask.execute();
 
         return rootView;
     }

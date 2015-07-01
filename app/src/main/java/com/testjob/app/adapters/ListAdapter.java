@@ -92,27 +92,28 @@ public class ListAdapter extends BaseAdapter {
                 break;
 
             case TYPE_SUB_ARTICLE:
+                int subArticlePosition = getSubArticleFromAbsolutePosition(position);
                 view = mInflater.inflate(R.layout.sub_article, null);
                 ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
+                String imagePath = mSubArticle.get(subArticlePosition).getPicture();
                 //todo fill SubArticle ImageView
                 TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
-                tvSubArticleTitle.setText(mSubArticle.get(getSubArticleFromAbsolutePosition(position)).getTitle());
+                tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
                 TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
-                tvSubArticleDescription.setText(
-                        mSubArticle.get(getSubArticleFromAbsolutePosition(position)).getDescription());
+                tvSubArticleDescription.setText(mSubArticle.get(subArticlePosition).getDescription());
                 break;
 
             case TYPE_COMMENT:
+                int commentPosition = getCommentFromAbsolutePosition(position);
                 view = mInflater.inflate(R.layout.comment, null);
                 ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
                 //todo fill Comment ImageView
                 TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
-                tvCommentUserName.setText(mComment.get(getCommentFromAbsolutePosition(position)).getUserName());
+                tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
                 TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
-                tvCommentText.setText(mComment.get(getCommentFromAbsolutePosition(position)).getText());
+                tvCommentText.setText(mComment.get(commentPosition).getText());
                 TextView tvCommentDate = (TextView) view.findViewById(R.id.comment_date);
-                tvCommentDate.setText(DateFormat.format(
-                        "dd.MM.yyyy", mComment.get(getCommentFromAbsolutePosition(position)).getDate()));
+                tvCommentDate.setText(DateFormat.format("dd.MM.yyyy", mComment.get(commentPosition).getDate()));
                 break;
 
         }
