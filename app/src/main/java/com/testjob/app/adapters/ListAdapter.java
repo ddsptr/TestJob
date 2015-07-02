@@ -84,37 +84,49 @@ public class ListAdapter extends BaseAdapter {
 
         switch (getTypeByPosition(position)) {
             case TYPE_MAIN_ARTICLE:
-                view = mInflater.inflate(R.layout.main_article, null);
-                TextView tvMainArticleTitle = (TextView) view.findViewById(R.id.main_article_title);
-                tvMainArticleTitle.setText(mMainArticle.getTitle());
-                TextView tvMainArticleDescription = (TextView) view.findViewById(R.id.main_article_description);
-                tvMainArticleDescription.setText(mMainArticle.getDescription());
+                if (view == null) {
+                    view = mInflater.inflate(R.layout.main_article, null);
+                }
+                if (mMainArticle != null) {
+                    TextView tvMainArticleTitle = (TextView) view.findViewById(R.id.main_article_title);
+                    tvMainArticleTitle.setText(mMainArticle.getTitle());
+                    TextView tvMainArticleDescription = (TextView) view.findViewById(R.id.main_article_description);
+                    tvMainArticleDescription.setText(mMainArticle.getDescription());
+                }
                 break;
 
             case TYPE_SUB_ARTICLE:
-                int subArticlePosition = getSubArticleFromAbsolutePosition(position);
-                view = mInflater.inflate(R.layout.sub_article, null);
-                ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
-                String imageSubArticleUrl = mSubArticle.get(subArticlePosition).getPicture();
-                new DownloadImageTask(ivSubArticlePicture).execute(imageSubArticleUrl);
-                TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
-                tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
-                TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
-                tvSubArticleDescription.setText(mSubArticle.get(subArticlePosition).getDescription());
+                if (view == null) {
+                    view = mInflater.inflate(R.layout.sub_article, null);
+                }
+                if (mSubArticle.size() > 0) {
+                    int subArticlePosition = getSubArticleFromAbsolutePosition(position);
+                    ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
+                    String imageSubArticleUrl = mSubArticle.get(subArticlePosition).getPicture();
+                    new DownloadImageTask(ivSubArticlePicture).execute(imageSubArticleUrl);
+                    TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
+                    tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
+                    TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
+                    tvSubArticleDescription.setText(mSubArticle.get(subArticlePosition).getDescription());
+                }
                 break;
 
             case TYPE_COMMENT:
-                int commentPosition = getCommentFromAbsolutePosition(position);
-                view = mInflater.inflate(R.layout.comment, null);
-                ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
-                String imageCommentAvatarUrl = mComment.get(commentPosition).getAvatar();
-                new DownloadImageTask(ivCommentAvatar).execute(imageCommentAvatarUrl);
-                TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
-                tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
-                TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
-                tvCommentText.setText(mComment.get(commentPosition).getText());
-                TextView tvCommentDate = (TextView) view.findViewById(R.id.comment_date);
-                tvCommentDate.setText(mComment.get(commentPosition).getDate());
+                if (view == null) {
+                    view = mInflater.inflate(R.layout.comment, null);
+                }
+                if (mComment.size() > 0) {
+                    int commentPosition = getCommentFromAbsolutePosition(position);
+                    ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
+                    String imageCommentAvatarUrl = mComment.get(commentPosition).getAvatar();
+                    new DownloadImageTask(ivCommentAvatar).execute(imageCommentAvatarUrl);
+                    TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
+                    tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
+                    TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
+                    tvCommentText.setText(mComment.get(commentPosition).getText());
+                    TextView tvCommentDate = (TextView) view.findViewById(R.id.comment_date);
+                    tvCommentDate.setText(mComment.get(commentPosition).getDate());
+                }
                 break;
 
         }

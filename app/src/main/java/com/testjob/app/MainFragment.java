@@ -24,7 +24,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        final View pictureSlider = inflater.inflate(R.layout.picture_slider, container, false);
+        final View pictureSlider = inflater.inflate(R.layout.picture_slider, null, false);
         ViewPager viewPictures = (ViewPager) pictureSlider.findViewById(R.id.up_sliding_picture);
         PictureSliderAdapter pictureSliderAdapter = new PictureSliderAdapter(getActivity());
         viewPictures.setAdapter(pictureSliderAdapter);
@@ -33,9 +33,13 @@ public class MainFragment extends Fragment {
         pictureIndicator.setViewPager(viewPictures);
 
         ListAdapter listAdapter = new ListAdapter(getActivity());
+        FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter, pictureSliderAdapter);
+        fetchArticleTask.execute();
+
+
         ListView listView = (ListView) rootView.findViewById(R.id.list);
-        listView.setAdapter(listAdapter);
         listView.addHeaderView(pictureSlider);
+        listView.setAdapter(listAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -48,8 +52,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter, pictureSliderAdapter);
-        fetchArticleTask.execute();
 
         return rootView;
     }
