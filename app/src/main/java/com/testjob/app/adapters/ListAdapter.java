@@ -3,6 +3,7 @@ package com.testjob.app.adapters;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.testjob.app.DownloadImageTask;
 import com.testjob.app.ImageCache;
 import com.testjob.app.R;
+import com.testjob.app.Utils;
 import com.testjob.app.dto.Comment;
 import com.testjob.app.dto.MainArticle;
 import com.testjob.app.dto.SubArticle;
@@ -38,6 +40,8 @@ public class ListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
     private ImageCache mImageCache;
+    private Bitmap mAvatarNotAvailable;
+    private Bitmap mImageNotAvailable;
 
     public ListAdapter(Context context) {
         mContext = context;
@@ -45,6 +49,10 @@ public class ListAdapter extends BaseAdapter {
         int memClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageCache = new ImageCache(cacheSize);
+        mAvatarNotAvailable =
+                Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.default_avatar, 50, 50);
+        mImageNotAvailable =
+                Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 100, 80);
     }
 
     public void addArticle(MainArticle mainArticle) {
@@ -118,7 +126,7 @@ public class ListAdapter extends BaseAdapter {
                     int subArticlePosition = getSubArticleFromAbsolutePosition(position);
                     ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
                     String imageSubArticleUrl = mSubArticle.get(subArticlePosition).getPicture();
-                    inflateImage(ivSubArticlePicture, imageSubArticleUrl);
+                    inflateImage(ivSubArticlePicture, imageSubArticleUrl, mImageNotAvailable);
                     TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
                     tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
                     TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
@@ -134,7 +142,7 @@ public class ListAdapter extends BaseAdapter {
                     int commentPosition = getCommentFromAbsolutePosition(position);
                     ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
                     String imageCommentAvatarUrl = mComment.get(commentPosition).getAvatar();
-                    inflateImage(ivCommentAvatar, imageCommentAvatarUrl);
+                    inflateImage(ivCommentAvatar, imageCommentAvatarUrl, mAvatarNotAvailable);
                     TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
                     tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
                     TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
@@ -179,12 +187,12 @@ public class ListAdapter extends BaseAdapter {
         return position - MAIN_ARTICLES_COUNT;
     }
 
-    private void inflateImage(ImageView imageView, String url) {
+    private void inflateImage(ImageView imageView, String url, Bitmap notAvailable) {
         Bitmap image = mImageCache.get(url);
         if (image != null) {
             imageView.setImageBitmap(image);
         } else {
-            new DownloadImageTask(imageView, mImageCache).execute(url);
+            new DownloadImageTask(imageView, mImageCache, notAvailable).execute(url);
         }
     }
 }

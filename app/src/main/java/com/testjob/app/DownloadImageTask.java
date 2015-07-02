@@ -16,10 +16,12 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView mImageView;
     ImageCache mImageCache;
     String mUrl;
+    Bitmap mNotAvailable;
 
-    public DownloadImageTask(ImageView imageView, ImageCache imageCache) {
+    public DownloadImageTask(ImageView imageView, ImageCache imageCache, Bitmap notAvailable) {
         mImageView = imageView;
         mImageCache = imageCache;
+        mNotAvailable = notAvailable;
     }
 
     @Override
@@ -32,6 +34,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
+            return mNotAvailable;
         }
         return picture;
     }

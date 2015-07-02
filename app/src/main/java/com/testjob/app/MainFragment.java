@@ -77,11 +77,14 @@ public class MainFragment extends Fragment {
         rootView.findViewById(R.id.send_comment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                listAdapter.addComment(new Comment("Unknown", editComment.getText().toString(),
-                        format.format(new Date()).toString(), getString(R.string.default_avatar)));
-                editComment.setText("");
-                listView.setSelection(listAdapter.getCount() - 1);
+                String commentText = editComment.getText().toString();
+                if (!commentText.equals("")) {
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    listAdapter.addComment(new Comment("Unknown", commentText,
+                            format.format(new Date()).toString(), ""));
+                    editComment.setText("");
+                    listView.setSelection(listAdapter.getCount() - 1);
+                }
             }
         });
 
@@ -128,7 +131,7 @@ public class MainFragment extends Fragment {
 
     private void showSendComment() {
         mSendCommentView.animate()
-                .translationY(0)
+                .translationY(0.0F)
                 .setDuration(mShortAnimTime);
     }
 
