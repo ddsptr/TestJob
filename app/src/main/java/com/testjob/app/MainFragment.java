@@ -1,20 +1,28 @@
 package com.testjob.app;
 
+import android.app.ActionBar;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
+import com.testjob.app.dto.MainArticle;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 public class MainFragment extends Fragment {
+    private final static String LOG_TAG = MainFragment.class.getSimpleName();
     private int mLastTop = 0;
+    private String mActionBarTitle;
+    private boolean mArticleTitle = false;
 
     public MainFragment() {
     }
@@ -32,10 +40,11 @@ public class MainFragment extends Fragment {
                 (UnderlinePageIndicator) pictureSlider.findViewById(R.id.sliding_picture_underline_indicator);
         pictureIndicator.setViewPager(viewPictures);
 
-        ListAdapter listAdapter = new ListAdapter(getActivity());
+        final ListAdapter listAdapter = new ListAdapter(getActivity());
         FetchArticleTask fetchArticleTask = new FetchArticleTask(getActivity(), listAdapter, pictureSliderAdapter);
         fetchArticleTask.execute();
 
+        mActionBarTitle = (String) getActivity().getTitle();
 
         ListView listView = (ListView) rootView.findViewById(R.id.list);
         listView.addHeaderView(pictureSlider);
@@ -49,11 +58,22 @@ public class MainFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 parallax(pictureSlider);
+                handleVisiblePositions(view, listAdapter);
             }
         });
 
-
         return rootView;
+    }
+
+    private void handleVisiblePositions(AbsListView view, ListAdapter listAdapter) {
+        int firstVisiblePosition = view.getFirstVisiblePosition();
+        if ((firstVisiblePosition > 0) && (!mArticleTitle)) {
+            mArticleTitle = true;
+            ((MainActivity) getActivity()).setCustomTitle(listAdapter.getTitle());
+        } else if ((firstVisiblePosition == 0) && (mArticleTitle)){
+            mArticleTitle = false;
+            getActivity().setTitle(mActionBarTitle);
+        }
     }
 
     private void parallax(final View v) {

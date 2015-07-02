@@ -8,6 +8,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
+    public void setCustomTitle(String title) {
+        setTitle(title);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

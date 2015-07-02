@@ -62,6 +62,10 @@ public class ListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public String getTitle() {
+        return mMainArticle.getTitle();
+    }
+
     @Override
     public int getCount() {
         return MAIN_ARTICLES_COUNT + mSubArticle.size() + mComment.size();
