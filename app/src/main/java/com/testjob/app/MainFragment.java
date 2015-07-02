@@ -21,6 +21,7 @@ public class MainFragment extends Fragment {
     private boolean mIsArticleTitle = false;
     private boolean mIsVisibleSendComment = false;
     private View mSendCommentView;
+    private int mShortAnimTime;
 
     public MainFragment() {
     }
@@ -43,7 +44,7 @@ public class MainFragment extends Fragment {
         fetchArticleTask.execute();
 
         mActionBarTitle = (String) getActivity().getTitle();
-
+        mShortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
         mSendCommentView = rootView.findViewById(R.id.send_comment);
 
         ListView listView = (ListView) rootView.findViewById(R.id.list);
@@ -105,10 +106,14 @@ public class MainFragment extends Fragment {
     }
 
     private void showSendComment() {
-        mSendCommentView.setVisibility(View.VISIBLE);
+        mSendCommentView.animate()
+                .translationY(0)
+                .setDuration(mShortAnimTime);
     }
 
     private void hideSendComment() {
-        mSendCommentView.setVisibility(View.GONE);
+        mSendCommentView.animate()
+                .translationY(mSendCommentView.getHeight())
+                .setDuration(mShortAnimTime);
     }
 }
