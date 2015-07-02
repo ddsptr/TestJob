@@ -18,7 +18,9 @@ public class MainFragment extends Fragment {
     private final static String LOG_TAG = MainFragment.class.getSimpleName();
     private int mLastTop = 0;
     private String mActionBarTitle;
-    private boolean mArticleTitle = false;
+    private boolean mIsArticleTitle = false;
+    private boolean mIsVisibleSendComment = false;
+    private View mSendCommentView;
 
     public MainFragment() {
     }
@@ -42,6 +44,8 @@ public class MainFragment extends Fragment {
 
         mActionBarTitle = (String) getActivity().getTitle();
 
+        mSendCommentView = rootView.findViewById(R.id.send_comment);
+
         ListView listView = (ListView) rootView.findViewById(R.id.list);
         listView.addHeaderView(pictureSlider);
         listView.setAdapter(listAdapter);
@@ -54,21 +58,34 @@ public class MainFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 parallax(pictureSlider);
-                handleVisiblePositions(view, listAdapter);
+                handleFirstVisiblePositions(view, listAdapter);
+                handleLastVisiblePositions(view, listAdapter);
             }
         });
 
         return rootView;
     }
 
-    private void handleVisiblePositions(AbsListView view, ListAdapter listAdapter) {
+    private void handleFirstVisiblePositions(AbsListView view, ListAdapter listAdapter) {
         int firstVisiblePosition = view.getFirstVisiblePosition();
-        if ((firstVisiblePosition > 0) && (!mArticleTitle)) {
-            mArticleTitle = true;
+        if ((firstVisiblePosition > 0) && (!mIsArticleTitle)) {
+            mIsArticleTitle = true;
             ((MainActivity) getActivity()).setCustomTitle(listAdapter.getTitle());
-        } else if ((firstVisiblePosition == 0) && (mArticleTitle)) {
-            mArticleTitle = false;
+        } else if ((firstVisiblePosition == 0) && (mIsArticleTitle)) {
+            mIsArticleTitle = false;
             getActivity().setTitle(mActionBarTitle);
+        }
+    }
+
+    private void handleLastVisiblePositions(AbsListView view, ListAdapter listAdapter) {
+        int lastVisiblePosition = view.getLastVisiblePosition();
+        int commentsStartPosition = listAdapter.getCommentStartPosition();
+        if ((lastVisiblePosition > commentsStartPosition) && (!mIsVisibleSendComment)) {
+            mIsVisibleSendComment = true;
+            showSendComment();
+        } else if ((lastVisiblePosition <= commentsStartPosition) && (mIsVisibleSendComment)) {
+            mIsVisibleSendComment = false;
+            hideSendComment();
         }
     }
 
@@ -87,4 +104,11 @@ public class MainFragment extends Fragment {
         }
     }
 
+    private void showSendComment() {
+        mSendCommentView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSendComment() {
+        mSendCommentView.setVisibility(View.GONE);
+    }
 }

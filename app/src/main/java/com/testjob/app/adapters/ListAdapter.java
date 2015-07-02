@@ -66,6 +66,10 @@ public class ListAdapter extends BaseAdapter {
         return mMainArticle.getTitle();
     }
 
+    public int getCommentStartPosition() {
+        return MAIN_ARTICLES_COUNT + mSubArticle.size();
+    }
+
     @Override
     public int getCount() {
         return MAIN_ARTICLES_COUNT + mSubArticle.size() + mComment.size();
