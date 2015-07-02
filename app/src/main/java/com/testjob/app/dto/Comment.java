@@ -1,7 +1,5 @@
 package com.testjob.app.dto;
 
-import java.util.Date;
-
 /**
  * Created by dds on 01.07.15.
  */

@@ -1,7 +1,6 @@
 package com.testjob.app;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.util.LruCache;
 
 /**

@@ -1,21 +1,17 @@
 package com.testjob.app;
 
-import android.app.ActionBar;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.TextView;
+
 import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
-import com.testjob.app.dto.MainArticle;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 public class MainFragment extends Fragment {
@@ -70,7 +66,7 @@ public class MainFragment extends Fragment {
         if ((firstVisiblePosition > 0) && (!mArticleTitle)) {
             mArticleTitle = true;
             ((MainActivity) getActivity()).setCustomTitle(listAdapter.getTitle());
-        } else if ((firstVisiblePosition == 0) && (mArticleTitle)){
+        } else if ((firstVisiblePosition == 0) && (mArticleTitle)) {
             mArticleTitle = false;
             getActivity().setTitle(mActionBarTitle);
         }

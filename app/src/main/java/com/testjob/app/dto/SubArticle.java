@@ -1,7 +1,5 @@
 package com.testjob.app.dto;
 
-import android.media.Image;
-
 /**
  * Created by dds on 01.07.15.
  */

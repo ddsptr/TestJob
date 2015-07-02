@@ -3,11 +3,13 @@ package com.testjob.app;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
 import com.testjob.app.dto.Comment;
 import com.testjob.app.dto.MainArticle;
 import com.testjob.app.dto.SubArticle;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
