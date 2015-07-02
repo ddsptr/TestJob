@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import com.testjob.app.adapters.ListAdapter;
 import com.testjob.app.adapters.PictureSliderAdapter;
+
+import com.testjob.app.dto.Comment;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 public class MainFragment extends Fragment {
@@ -45,10 +47,12 @@ public class MainFragment extends Fragment {
 
         mActionBarTitle = (String) getActivity().getTitle();
         mShortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        mSendCommentView = rootView.findViewById(R.id.send_comment);
+        mSendCommentView = rootView.findViewById(R.id.send_comment_layout);
 
+        View listViewFooter = inflater.inflate(R.layout.listview_footer, null, false);
         ListView listView = (ListView) rootView.findViewById(R.id.list);
         listView.addHeaderView(pictureSlider);
+        listView.addFooterView(listViewFooter);
         listView.setAdapter(listAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -61,6 +65,12 @@ public class MainFragment extends Fragment {
                 parallax(pictureSlider);
                 handleFirstVisiblePositions(view, listAdapter);
                 handleLastVisiblePositions(view, listAdapter);
+            }
+        });
+
+        rootView.findViewById(R.id.send_comment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
 

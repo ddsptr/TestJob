@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="#fff"
+    android:background="@color/background"
     >
 
     <FrameLayout
@@ -14,15 +14,19 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@null"
             />
 
         <LinearLayout
-            android:id="@+id/send_comment"
+            android:id="@+id/send_comment_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="bottom"
             android:translationY="40dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:background="@color/send_comment_background"
             >
 
             <EditText
@@ -30,9 +34,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="8dp"
                 />
 
             <Button
+                android:id="@+id/send_comment"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:text="@string/button_send"

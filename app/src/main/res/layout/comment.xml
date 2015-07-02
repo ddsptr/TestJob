@@ -5,6 +5,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
+                android:paddingBottom="8dp"
     >
 
     <ImageView
@@ -25,8 +26,10 @@
             android:id="@+id/comment_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:includeFontPadding="false"
             android:text="username"
             android:textStyle="bold"
+            android:textColor="@color/user_name_text_color"
             android:textAppearance="?android:textAppearanceSmall"
             />
 
