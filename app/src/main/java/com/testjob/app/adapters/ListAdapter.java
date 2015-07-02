@@ -1,6 +1,8 @@
 package com.testjob.app.adapters;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.testjob.app.DownloadImageTask;
+import com.testjob.app.ImageCache;
 import com.testjob.app.R;
 import com.testjob.app.dto.Comment;
 import com.testjob.app.dto.MainArticle;
@@ -34,10 +37,14 @@ public class ListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private Context mContext;
+    private ImageCache mImageCache;
 
     public ListAdapter(Context context) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int memClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        int cacheSize = 1024 * 1024 * memClass / 8;
+        mImageCache = new ImageCache(cacheSize);
     }
 
     public void addArticle(MainArticle mainArticle) {
@@ -103,7 +110,7 @@ public class ListAdapter extends BaseAdapter {
                     int subArticlePosition = getSubArticleFromAbsolutePosition(position);
                     ImageView ivSubArticlePicture = (ImageView) view.findViewById(R.id.sub_article_picture);
                     String imageSubArticleUrl = mSubArticle.get(subArticlePosition).getPicture();
-                    new DownloadImageTask(ivSubArticlePicture).execute(imageSubArticleUrl);
+                    inflateImage(ivSubArticlePicture, imageSubArticleUrl);
                     TextView tvSubArticleTitle = (TextView) view.findViewById(R.id.sub_article_title);
                     tvSubArticleTitle.setText(mSubArticle.get(subArticlePosition).getTitle());
                     TextView tvSubArticleDescription = (TextView) view.findViewById(R.id.sub_article_description);
@@ -119,7 +126,7 @@ public class ListAdapter extends BaseAdapter {
                     int commentPosition = getCommentFromAbsolutePosition(position);
                     ImageView ivCommentAvatar = (ImageView) view.findViewById(R.id.comment_avatar);
                     String imageCommentAvatarUrl = mComment.get(commentPosition).getAvatar();
-                    new DownloadImageTask(ivCommentAvatar).execute(imageCommentAvatarUrl);
+                    inflateImage(ivCommentAvatar, imageCommentAvatarUrl);
                     TextView tvCommentUserName = (TextView) view.findViewById(R.id.comment_username);
                     tvCommentUserName.setText(mComment.get(commentPosition).getUserName());
                     TextView tvCommentText = (TextView) view.findViewById(R.id.comment_text);
@@ -149,7 +156,7 @@ public class ListAdapter extends BaseAdapter {
             return TYPE_MAIN_ARTICLE;
         } else if (position < MAIN_ARTICLES_COUNT + mSubArticle.size()) {
             return TYPE_SUB_ARTICLE;
-        } else if (position < MAIN_ARTICLES_COUNT + mSubArticle.size() + mComment.size()){
+        } else if (position < MAIN_ARTICLES_COUNT + mSubArticle.size() + mComment.size()) {
             return TYPE_COMMENT;
         } else {
             return TYPE_UNDEFINED;
@@ -162,5 +169,14 @@ public class ListAdapter extends BaseAdapter {
 
     private int getSubArticleFromAbsolutePosition(int position) {
         return position - MAIN_ARTICLES_COUNT;
+    }
+
+    private void inflateImage(ImageView imageView, String url) {
+        Bitmap image = mImageCache.get(url);
+        if (image != null) {
+            imageView.setImageBitmap(image);
+        } else {
+            new DownloadImageTask(imageView, mImageCache).execute(url);
+        }
     }
 }

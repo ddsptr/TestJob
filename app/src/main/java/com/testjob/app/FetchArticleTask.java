@@ -46,11 +46,6 @@ public class FetchArticleTask extends AsyncTask<Void, Object, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-    }
-
-    @Override
     protected void onProgressUpdate(Object... objects) {
         if (objects[0] instanceof MainArticle) {
             mListAdapter.addArticle((MainArticle) objects[0]);

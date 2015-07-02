@@ -1,12 +1,14 @@
 package com.testjob.app.adapters;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.testjob.app.DownloadImageTask;
-import com.testjob.app.R;
+import com.testjob.app.ImageCache;
 
 import java.util.ArrayList;
 
@@ -16,9 +18,13 @@ import java.util.ArrayList;
 public class PictureSliderAdapter extends PagerAdapter {
     private Context mContext;
     private ArrayList<String> mPictures = new ArrayList<String>();
+    private ImageCache mImageCache;
 
     public PictureSliderAdapter(Context context) {
         mContext = context;
+        int memClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        int cacheSize = 1024 * 1024 * memClass / 8;
+        mImageCache = new ImageCache(cacheSize);
     }
 
     public void addPicture(String picture) {
@@ -40,7 +46,7 @@ public class PictureSliderAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_START);
-        new DownloadImageTask(imageView).execute(mPictures.get(position));
+        inflateImage(imageView, mPictures.get(position));
         container.addView(imageView, 0);
         return imageView;
     }
@@ -48,5 +54,14 @@ public class PictureSliderAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((ImageView) object);
+    }
+
+    private void inflateImage(ImageView imageView, String url) {
+        Bitmap image = mImageCache.get(url);
+        if (image != null) {
+            imageView.setImageBitmap(image);
+        } else {
+            new DownloadImageTask(imageView, mImageCache).execute(url);
+        }
     }
 }

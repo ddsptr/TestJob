@@ -14,16 +14,19 @@ import java.net.URL;
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView mImageView;
+    ImageCache mImageCache;
+    String mUrl;
 
-    public DownloadImageTask(ImageView imageView) {
+    public DownloadImageTask(ImageView imageView, ImageCache imageCache) {
         mImageView = imageView;
+        mImageCache = imageCache;
     }
 
     protected Bitmap doInBackground(String... urls) {
-        String bitmapUrl = urls[0];
+        mUrl = urls[0];
         Bitmap picture = null;
         try {
-            InputStream in = new URL(bitmapUrl).openStream();
+            InputStream in = new URL(mUrl).openStream();
             picture = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
@@ -33,6 +36,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
+        mImageCache.put(mUrl, result);
         mImageView.setImageBitmap(result);
     }
 }
