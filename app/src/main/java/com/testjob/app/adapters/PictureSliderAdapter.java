@@ -3,7 +3,6 @@ package com.testjob.app.adapters;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import com.testjob.app.DownloadImageTask;
 import com.testjob.app.ImageCache;
 import com.testjob.app.R;
-import com.testjob.app.Utils;
+import com.testjob.app.BitmapDecoder;
 
 import java.util.ArrayList;
 
@@ -31,7 +30,7 @@ public class PictureSliderAdapter extends PagerAdapter {
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageCache = new ImageCache(cacheSize);
         mImageNotAvailable =
-                Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 240, 270);
+                BitmapDecoder.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 240, 270);
     }
 
     public void addPicture(String picture) {

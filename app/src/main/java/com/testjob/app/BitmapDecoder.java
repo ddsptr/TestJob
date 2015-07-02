@@ -1,5 +1,6 @@
 package com.testjob.app;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,8 +8,17 @@ import android.graphics.BitmapFactory;
 /**
  * Created by dds on 02.07.15.
  */
-public class Utils {
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+public class BitmapDecoder {
+    Context mContext;
+    float mDensity;
+
+    public  BitmapDecoder(Context context) {
+        mContext = context;
+        mDensity = ((MainActivity) context).getResources().getDisplayMetrics().density;
+
+    }
+
+    public Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -16,8 +26,10 @@ public class Utils {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
 
+        int normalizedWidth = (int) (reqWidth * mDensity);
+        int normalizedHeight = (int) (reqHeight * mDensity);
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = calculateInSampleSize(options, normalizedWidth, normalizedHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;

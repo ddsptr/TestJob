@@ -3,17 +3,13 @@ package com.testjob.app.adapters;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.testjob.app.DownloadImageTask;
-import com.testjob.app.ImageCache;
-import com.testjob.app.R;
-import com.testjob.app.Utils;
+import com.testjob.app.*;
 import com.testjob.app.dto.Comment;
 import com.testjob.app.dto.MainArticle;
 import com.testjob.app.dto.SubArticle;
@@ -49,10 +45,11 @@ public class ListAdapter extends BaseAdapter {
         int memClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageCache = new ImageCache(cacheSize);
-        mAvatarNotAvailable =
-                Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.default_avatar, 50, 50);
-        mImageNotAvailable =
-                Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 100, 80);
+        BitmapDecoder bitmapDecoder = new BitmapDecoder(context);
+        mAvatarNotAvailable = bitmapDecoder.decodeSampledBitmapFromResource(context.getResources(),
+                R.drawable.default_avatar, 50, 50);
+        mImageNotAvailable = bitmapDecoder.decodeSampledBitmapFromResource(context.getResources(),
+                R.drawable.image_not_available, 100, 80);
     }
 
     public void addArticle(MainArticle mainArticle) {
