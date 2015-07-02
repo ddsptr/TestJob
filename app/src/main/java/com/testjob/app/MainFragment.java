@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.testjob.app.adapters.ListAdapter;
@@ -15,6 +16,10 @@ import com.testjob.app.adapters.PictureSliderAdapter;
 
 import com.testjob.app.dto.Comment;
 import com.viewpagerindicator.UnderlinePageIndicator;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainFragment extends Fragment {
     private final static String LOG_TAG = MainFragment.class.getSimpleName();
@@ -50,7 +55,7 @@ public class MainFragment extends Fragment {
         mSendCommentView = rootView.findViewById(R.id.send_comment_layout);
 
         View listViewFooter = inflater.inflate(R.layout.listview_footer, null, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.list);
+        final ListView listView = (ListView) rootView.findViewById(R.id.list);
         listView.addHeaderView(pictureSlider);
         listView.addFooterView(listViewFooter);
         listView.setAdapter(listAdapter);
@@ -68,9 +73,15 @@ public class MainFragment extends Fragment {
             }
         });
 
+        final EditText editComment = (EditText) rootView.findViewById(R.id.comment);
         rootView.findViewById(R.id.send_comment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                listAdapter.addComment(new Comment("Unknown", editComment.getText().toString(),
+                        format.format(new Date()).toString(), getString(R.string.default_avatar)));
+                editComment.setText("");
+                listView.setSelection(listAdapter.getCount() - 1);
             }
         });
 

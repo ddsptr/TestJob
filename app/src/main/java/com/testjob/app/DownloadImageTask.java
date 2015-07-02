@@ -22,6 +22,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         mImageCache = imageCache;
     }
 
+    @Override
     protected Bitmap doInBackground(String... urls) {
         mUrl = urls[0];
         Bitmap picture = null;
@@ -35,6 +36,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         return picture;
     }
 
+    @Override
     protected void onPostExecute(Bitmap result) {
         mImageCache.put(mUrl, result);
         mImageView.setImageBitmap(result);
