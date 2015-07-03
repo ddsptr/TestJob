@@ -29,8 +29,9 @@ public class PictureSliderAdapter extends PagerAdapter {
         int memClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageCache = new ImageCache(cacheSize);
+        BitmapDecoder bitmapDecoder = new BitmapDecoder(context);
         mImageNotAvailable =
-                BitmapDecoder.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 240, 270);
+                bitmapDecoder.decodeSampledBitmapFromResource(context.getResources(), R.drawable.image_not_available, 240, 270);
     }
 
     public void addPicture(String picture) {
