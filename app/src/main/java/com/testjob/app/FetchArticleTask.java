@@ -74,6 +74,8 @@ public class FetchArticleTask extends AsyncTask<Void, Object, Void> {
         final String USERNAME = "username";
         final String TEXT = "text";
         final String DATE = "date";
+        final String ID = "id";
+        final String PARENT_ID = "parent_id";
 
         try {
             InputStream stream = mContext.getResources().openRawResource(R.raw.json);
@@ -104,12 +106,23 @@ public class FetchArticleTask extends AsyncTask<Void, Object, Void> {
             JSONArray commentJsonArray = rootElementJson.getJSONArray(COMMENTS);
             for (int i = 0; i < commentJsonArray.length(); i++) {
                 JSONObject commentJson = commentJsonArray.getJSONObject(i);
+                int commentId = commentJson.getInt(ID);
+                int parentId = 0;
+                try {
+                    parentId = commentJson.getInt(PARENT_ID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 String commentAvatar = commentJson.getString(AVATAR);
                 String commentUserName = commentJson.getString(USERNAME);
                 String commentText = commentJson.getString(TEXT);
                 long dateTime = commentJson.getLong(DATE);
                 String commentDate = getReadableDateString(dateTime);
-                publishProgress(new Comment(commentUserName, commentText, commentDate, commentAvatar));
+                if (parentId != 0) {
+                    publishProgress(new Comment(commentId, parentId, commentUserName, commentText, commentDate, commentAvatar));
+                } else {
+                    publishProgress(new Comment(commentId, commentUserName, commentText, commentDate, commentAvatar));
+                }
             }
 
         } catch (JSONException e) {
