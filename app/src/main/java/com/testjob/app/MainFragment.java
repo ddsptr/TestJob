@@ -80,7 +80,7 @@ public class MainFragment extends Fragment {
                 String commentText = editComment.getText().toString();
                 if (!commentText.equals("")) {
                     SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                    listAdapter.addComment(new Comment("Unknown", commentText,
+                    listAdapter.addComment(new Comment(listAdapter.getMaxCommentId(), "Unknown", commentText,
                             format.format(new Date()).toString(), ""));
                     editComment.setText("");
                     listView.setSelection(listAdapter.getCount() - 1);

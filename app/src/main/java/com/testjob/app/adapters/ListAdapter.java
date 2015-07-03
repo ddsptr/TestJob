@@ -1,5 +1,6 @@
 package com.testjob.app.adapters;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -19,6 +20,9 @@ import com.testjob.app.dto.MainArticle;
 import com.testjob.app.dto.SubArticle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 /**
  * Created by dds on 01.07.15.
@@ -35,7 +39,7 @@ public class ListAdapter extends BaseAdapter {
 
     private MainArticle mMainArticle;
     private ArrayList<SubArticle> mSubArticle = new ArrayList<SubArticle>();
-    private ArrayList<Comment> mComment = new ArrayList<Comment>();
+    private LinkedList<Comment> mComment = new LinkedList<Comment>();
 
     private LayoutInflater mInflater;
     private Context mContext;
@@ -66,7 +70,16 @@ public class ListAdapter extends BaseAdapter {
     }
 
     public void addComment(Comment comment) {
-        mComment.add(comment);
+        int parentId = comment.getParentId();
+        if (parentId != 0) {
+            try {
+                mComment.add(getCommentPosition(parentId) + 1, comment);
+            } catch (IndexOutOfBoundsException e) {
+                mComment.add(comment);
+            }
+        } else {
+            mComment.add(comment);
+        }
         notifyDataSetChanged();
     }
 
@@ -76,6 +89,16 @@ public class ListAdapter extends BaseAdapter {
 
     public int getCommentStartPosition() {
         return MAIN_ARTICLES_COUNT + mSubArticle.size();
+    }
+
+    public int getMaxCommentId() {
+        int maxId = 0;
+        for (Comment comment : mComment) {
+            if (comment.getId() > maxId) {
+                maxId = comment.getId();
+            }
+        }
+        return maxId;
     }
 
     @Override
@@ -149,6 +172,10 @@ public class ListAdapter extends BaseAdapter {
                     tvCommentText.setText(mComment.get(commentPosition).getText());
                     TextView tvCommentDate = (TextView) view.findViewById(R.id.comment_date);
                     tvCommentDate.setText(mComment.get(commentPosition).getDate());
+                    if (mComment.get(commentPosition).getParentId() != 0) {
+                        view.setPadding(view.getPaddingLeft() + ivCommentAvatar.getLayoutParams().width / 2,
+                                view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+                    }
                 }
                 break;
 
@@ -194,5 +221,15 @@ public class ListAdapter extends BaseAdapter {
         } else {
             new DownloadImageTask(imageView, mImageCache, notAvailable).execute(url);
         }
+    }
+
+    private int getCommentPosition(int id)
+        throws IndexOutOfBoundsException {
+        for (int i = 0; i < mComment.size(); i++) {
+            if (mComment.get(i).getId() == id) {
+                return i;
+            }
+        }
+        throw new IndexOutOfBoundsException();
     }
 }
